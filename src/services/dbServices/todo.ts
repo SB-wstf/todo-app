@@ -1,5 +1,5 @@
 import postgresdb from "../../config/db";
-import { todos } from "../../models/schema";
+import { todos, users } from "../../models/schema";
 import { and, eq, sql } from "drizzle-orm";
 
 export default class Todo {
@@ -23,10 +23,7 @@ export default class Todo {
 
     static getTodosByUserId = async (userId: number): Promise<any> => {
         try {
-            const getTodo = await postgresdb
-                .select()
-                .from(todos)
-                .where(eq(todos.userId, userId));
+            const getTodo = await postgresdb.select().from(todos).where(eq(todos.userId, userId));
             return getTodo;
         } catch (erro: any) {
             console.error(erro);
@@ -101,6 +98,32 @@ export default class Todo {
         } catch (error: any) {
             console.error(error);
             throw new Error(error);
+        }
+    };
+
+    static getAllTodos = async (): Promise<any> => {
+        try {
+            const allTodosWithUserDetails = await postgresdb
+                .select({
+                    todoId: todos.id,
+                    title: todos.title,
+                    description: todos.description,
+                    isPinned: todos.isPinned,
+                    isCompleted: todos.isCompleted,
+                    createdAt: todos.createdAt,
+                    updatedAt: todos.updatedAt,
+                    user: {
+                        firstName: users.firstName,
+                        lastName: users.lastName,
+                        email: users.email,
+                    },
+                })
+                .from(todos)
+                .leftJoin(users, eq(todos.userId, users.id));
+            return allTodosWithUserDetails;
+        } catch (erro: any) {
+            console.error(erro);
+            throw new Error(erro);
         }
     };
 }

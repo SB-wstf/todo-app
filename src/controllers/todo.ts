@@ -133,4 +133,15 @@ export default class User {
             res.status(500).json({ status: false, error: "Internal Server Error" });
         }
     };
+
+    // Fetch all todos byadmin
+    static getAllTodosController = async (req: Request, res: Response) => {
+        try {
+            const todos = await dbServices.todo.getAllTodos();
+            res.status(200).json({ status: true, todos });
+        } catch (error) {
+            console.error("Error fetching todos:", error);
+            res.status(500).json({ status: false, error: "Internal Server Error" });
+        }
+    };
 }

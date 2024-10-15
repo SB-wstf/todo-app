@@ -54,4 +54,7 @@ router.delete(
     controller.todo.deleteByTodoId
 );
 
+// Route for fetching all todos
+router.get("/all", controller.todo.getAllTodosController);
+
 export default router;
