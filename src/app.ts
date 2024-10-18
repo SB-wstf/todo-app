@@ -17,6 +17,8 @@ app.use(
 app.use(express.json());
 app.use("/", router);
 
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
     logger.info(`Server is running on port ${port}`);
 });
+
+export { app, server };
